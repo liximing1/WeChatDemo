@@ -30,10 +30,13 @@ class LoginRegisteredPageState extends State<LoginRegisteredPage>{
     return new Scaffold(
       body: new Stack(
         children: <Widget>[
-          new Image.asset('images/login.jpg',
-            fit: BoxFit.fitWidth,
+          new Opacity( //控制透明度
+            opacity: 0.8,
+            child: new Image.asset('images/login.jpg',
+        fit: BoxFit.fitWidth,
         //    height: MediaQuery.of(context).size.height, //获取当前屏幕的高度
-            width: MediaQuery.of(context).size.width,
+        width: MediaQuery.of(context).size.width,
+      ),
           ),
           new Offstage(
             offstage: _offstate,
