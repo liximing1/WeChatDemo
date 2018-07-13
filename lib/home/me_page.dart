@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:httpdemo/bean/user_bean.dart';
 import 'package:httpdemo/home/address_page.dart';
 import 'package:httpdemo/home/found_page.dart';
 
 class MePage extends StatelessWidget{
+  UserBean user;
   String nickName;
   String chatNumber;
-  MePage({this.nickName,this.chatNumber});
+  MePage({this.nickName,this.chatNumber,this.user});
   @override
   Widget build(BuildContext context) {
     return new Scaffold(

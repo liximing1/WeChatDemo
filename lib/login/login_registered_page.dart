@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:httpdemo/login/login_page.dart';
 import 'package:httpdemo/login/registered_page.dart';
+import 'package:firebase_database/firebase_database.dart';
 
 class LoginRegisteredPage extends StatefulWidget{
   @override
@@ -12,6 +13,11 @@ class LoginRegisteredPageState extends State<LoginRegisteredPage>{
   bool _offstate = false;
    set offstate(bool offstate) => _offstate=offstate;
    get offstate => _offstate;
+  TextEditingController _nameController;
+  TextEditingController _passwordController;
+  TextEditingController _passwordController2;
+   DatabaseReference info = FirebaseDatabase.instance.reference().child('users');
+
   @override
   void initState() {
     // TODO: implement initState
@@ -38,14 +44,14 @@ class LoginRegisteredPageState extends State<LoginRegisteredPage>{
         width: MediaQuery.of(context).size.width,
       ),
           ),
-          new Offstage(
-            offstage: _offstate,
-            child: new LoginPage(loginRegisteredCallBack),
-          ),
-          new Offstage(
-            offstage: !_offstate,
-            child: new RegisteredPage(loginRegisteredCallBack),
-          )
+           new Offstage(
+             offstage: _offstate,
+             child: new LoginPage(loginRegisteredCallBack),
+              ),
+           new Offstage(
+              offstage: !_offstate,
+              child: new RegisteredPage(loginRegisteredCallBack),
+              )
         ],
       ),
     );
@@ -56,5 +62,6 @@ class LoginRegisteredPageState extends State<LoginRegisteredPage>{
       _offstate = !_offstate;
     });
   }
+
 
 }

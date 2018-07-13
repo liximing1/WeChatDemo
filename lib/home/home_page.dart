@@ -1,16 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:httpdemo/bean/user_bean.dart';
 import 'package:httpdemo/home/address_page.dart';
 import 'package:httpdemo/home/found_page.dart';
 import 'package:httpdemo/home/me_page.dart';
 import 'message_page.dart';
 
 class HomePage extends StatefulWidget{
+  UserBean user;
+  HomePage(this.user);
   @override
-  State<StatefulWidget> createState() => new HomePageState();
+  State<StatefulWidget> createState() => new HomePageState(user);
 }
 
 class HomePageState extends State<HomePage> with SingleTickerProviderStateMixin{
   TabController tabController;
+  HomePageState(this.user);
+  UserBean user;
   List<Widget> list = [MessagePage(),AddressPage(),FoundPage(),MePage()];
   @override
   void initState() {

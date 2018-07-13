@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:httpdemo/bean/user_bean.dart';
+import 'package:httpdemo/home/home_page.dart';
 import 'package:httpdemo/login/login_registered_page.dart';
+import 'package:firebase_database/firebase_database.dart';
+
 
 class LoginPage extends StatefulWidget{
   VoidCallback voidCallback;
@@ -10,8 +14,22 @@ class LoginPage extends StatefulWidget{
 }
 
 class LoginPageState extends State<LoginPage>{
-  TextEditingController _controller;
+  TextEditingController _nameController;
+  TextEditingController _passwordController;
   LoginRegisteredPageState lrps = new LoginRegisteredPageState();
+  DatabaseReference reference ;
+  String _passwordErr;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _nameController = new TextEditingController();
+    _passwordController = new TextEditingController();
+    reference = FirebaseDatabase.instance.reference().child('users');
+  }
+
+
   @override
   Widget build(BuildContext context) {
     return new Center(
@@ -22,7 +40,7 @@ class LoginPageState extends State<LoginPage>{
               new Container(
                 width: MediaQuery.of(context).size.width/2,
                 child:new TextField(
-                  controller: _controller,
+                  controller: _nameController,
                   decoration: const InputDecoration(
                     fillColor: Colors.white,
                     labelText:'用户名：',
@@ -33,8 +51,12 @@ class LoginPageState extends State<LoginPage>{
               new Container(
                 width: MediaQuery.of(context).size.width/2,
                 child: new TextField(
-                  controller: _controller,
+                  controller: _passwordController,
                   decoration: InputDecoration(
+                      helperText: _passwordErr,
+                      helperStyle: new TextStyle(
+                        color: Colors.red
+                      ),
                       labelText: '密码：',
                       labelStyle: TextStyle(fontSize: 15.0,color: Colors.white70)
                   ),
@@ -48,7 +70,28 @@ class LoginPageState extends State<LoginPage>{
                     borderRadius: BorderRadius.all(Radius.circular(5.0))
                 ),
                 child: new FlatButton(
-                    onPressed: null,
+                    onPressed: (){
+                      reference.child(_nameController.text).once().then((DataSnapshot onValue ){ //then传递的是reference位置查询的数据
+                        if(onValue.value!=null){
+                          if(onValue.value['password']==_passwordController.text){
+                            UserBean user = new UserBean(
+                              userName: onValue.value['username'],
+                              nickName: onValue.value['nickName']
+                            );
+                            //导航到home页面，并将数据带入到user类
+                            Navigator.of(context).push(new MaterialPageRoute(builder: (BuildContext context)=>HomePage(user)));
+                          }else{
+                            setState(() {
+                              _passwordErr = '密码或账号错误';
+                            });
+                          }
+                        }else{
+                          setState(() {
+                            _passwordErr = '密码或账号错误';
+                          });
+                        }
+                      });
+                    },
                     child: new Text('登录',style: new TextStyle(
                         color: Colors.black
                     ),)),
