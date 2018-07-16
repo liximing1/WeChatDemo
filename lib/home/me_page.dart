@@ -20,8 +20,8 @@ class MePage extends StatelessWidget{
           new DriverH(),
           new ListTile(
             leading: new Image.asset('images/touxiang1.jpg',width: 45.0,height: 45.0,),
-            title: new Text(nickName??'路飞',style: new TextStyle(fontSize: 15.0),),
-            subtitle: new Text(chatNumber??'wei_xin_9900',style: new TextStyle(color: Colors.black26,fontSize: 12.0),),
+            title: new Text(user.nickName??'路飞',style: new TextStyle(fontSize: 15.0),),
+            subtitle: new Text(user.userName??'wei_xin_9900',style: new TextStyle(color: Colors.black26,fontSize: 12.0),),
             trailing: new Icon(Icons.image),
             
           ),

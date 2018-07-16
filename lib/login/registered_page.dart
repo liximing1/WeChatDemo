@@ -120,6 +120,7 @@ class RegisteredPageState extends State<RegisteredPage>{
                         _passwordController.clear();
                         _passwordController2.clear();
                         _nickNameController.clear();
+                        widget.voidCallback;
                       });
                     }:null,
                     child: new Text('注册',style: new TextStyle(

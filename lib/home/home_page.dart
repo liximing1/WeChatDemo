@@ -9,18 +9,21 @@ class HomePage extends StatefulWidget{
   UserBean user;
   HomePage(this.user);
   @override
-  State<StatefulWidget> createState() => new HomePageState(user);
+  State<StatefulWidget> createState() => new HomePageState();
 }
 
 class HomePageState extends State<HomePage> with SingleTickerProviderStateMixin{
   TabController tabController;
-  HomePageState(this.user);
   UserBean user;
-  List<Widget> list = [MessagePage(),AddressPage(),FoundPage(),MePage()];
+  List<Widget> list ;
   @override
   void initState() {
     // TODO: implement initState
+    user = widget.user;
+    list= [MessagePage(user:user),AddressPage(),FoundPage(),MePage(user: user,)];
     tabController = new TabController(length: list.length, vsync: this);
+
+
   }
   @override
   void dispose() {

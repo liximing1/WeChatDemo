@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:httpdemo/bean/user_bean.dart';
 import 'talk_page.dart';
 
 class MessageCard extends StatelessWidget{
@@ -7,7 +8,8 @@ class MessageCard extends StatelessWidget{
   String subTitle;
   var messageTime;
   bool offstage;
-  MessageCard({this.imageUrl,this.title,this.subTitle,this.messageTime,this.offstage=false});
+  UserBean user;
+  MessageCard({this.imageUrl,this.title,this.subTitle,this.messageTime,this.offstage=false,this.user});
 
 
   @override
@@ -16,7 +18,7 @@ class MessageCard extends StatelessWidget{
       margin: EdgeInsets.symmetric(horizontal: 10.0,vertical: 5.0),
       child: new ListTile(
         onTap: (){
-          Navigator.of(context).push(MaterialPageRoute(builder:(context)=> new TalkPage()));
+          Navigator.of(context).push(MaterialPageRoute(builder:(context)=> new TalkPage(user: user,)));
         },
         leading: new Image.asset(imageUrl??'images/gangdan.jpg',width: 45.0,height: 45.0,),
         title: new Text(title??'标题',style: new TextStyle(fontSize: 15.0),),

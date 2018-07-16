@@ -1,11 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_database/ui/firebase_animated_list.dart';
+import 'package:httpdemo/bean/user_bean.dart';
 
 class TalkPage extends StatefulWidget{
+  String appBarTitle;
+  UserBean user;
+  TalkPage({this.user});
+
   @override
   State<StatefulWidget> createState() => TalkPageState();
-  String appBarTitle;
+
 }
 
 class TalkPageState extends State<TalkPage> with SingleTickerProviderStateMixin{
@@ -22,9 +27,8 @@ class TalkPageState extends State<TalkPage> with SingleTickerProviderStateMixin{
     _tabcontroller = new TabController(length: 2, vsync: this);
     super.initState();
     //firebase的储存路径
-    reference = FirebaseDatabase.instance.reference().child('messages');
+    reference = FirebaseDatabase.instance.reference().child('users/'+widget.user.userName+'/messages/gangdan');
   }
-
   @override
   void dispose() {
     super.dispose();
@@ -98,7 +102,7 @@ class TalkPageState extends State<TalkPage> with SingleTickerProviderStateMixin{
                     icon: new Icon(
                         Icons.send,size: 30.0,),
                     onPressed: (){
-                      reference.push().set({'text':_controller.text});
+                      reference.push().set({'text':_controller.text,'nickName':widget.user.nickName});
                       _controller.clear();
                       setState(() {
                         _offsate=0;
