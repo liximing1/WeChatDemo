@@ -1,9 +1,9 @@
 class OtherUser {
-  String UserName;
-  String NickName;
-  String ImageURL;
+  String userName;
+  String nickName;
+  String imageURL;
 
-  OtherUser({this.UserName,this.NickName,this.ImageURL});
+  OtherUser({this.userName,this.nickName,this.imageURL});
 
 
 }

@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:httpdemo/bean/other_user.dart';
 import 'package:httpdemo/bean/user_bean.dart';
+import 'package:httpdemo/home/talk_page.dart';
 import 'message_card.dart';
 import 'package:firebase_database/firebase_database.dart';
+import 'package:firebase_database/ui/firebase_animated_list.dart';
 
 class MessagePage extends StatefulWidget{
   UserBean user;
@@ -19,16 +21,23 @@ class MessagePage extends StatefulWidget{
 class MessagePageState extends State<MessagePage>{
   UserBean user;
   OtherUser otherUser;
-  DatabaseReference databaseReference;
+  DatabaseReference _databaseReference;
+  TextEditingController _textEditingController;
+  String _errText;
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     user = widget.user;
-    otherUser = widget.otherUser;
-    databaseReference = FirebaseDatabase.instance.reference().child('users/'+ user.UserName+'/messages');
+    _databaseReference = FirebaseDatabase.instance.reference().child('users');
+    _textEditingController = new TextEditingController();
   }
-
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+    _textEditingController.dispose();
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -48,14 +57,32 @@ class MessagePageState extends State<MessagePage>{
                     title: new Text('添加会话'),
                     content: new Container(
                       child: new TextField(
+                        controller: _textEditingController,
                         decoration: InputDecoration(
-                          labelText: '请输入账号或昵称'
+                          labelText: '请输入账号查找',
+                          errorText: _errText,
                         ),
                       ),
                     ),
                     actions: <Widget>[
                       new FlatButton.icon(onPressed: (){
-
+                        _databaseReference.child(_textEditingController.text).once().then((DataSnapshot onValue){
+                          if(onValue==null){
+                            setState(() {
+                              _errText = '账号不存在';
+                            });
+                          }else{
+                            otherUser = new OtherUser(userName: onValue.value['username']
+                            ,nickName: onValue.value['nickName']
+                            );
+                            _databaseReference.child(user.userName+'/messages/'+otherUser.userName).set({'userName':otherUser.userName,'nickName':otherUser.nickName});
+                            _databaseReference.child(onValue.value['username']).child('messages/'+user.userName).set({'nickName':user.nickName,'userName':user.userName});
+                            Navigator.of(context).push(new MaterialPageRoute(builder: (BuildContext context)=>new TalkPage(
+                              user: user,
+                              otherUser:otherUser
+                            )));
+                          }
+                        });
                       },
                           icon: Icon(Icons.find_in_page,color: Colors.blue,),
                           label: new Text('查找')
@@ -68,12 +95,12 @@ class MessagePageState extends State<MessagePage>{
           ),
         ],
       ),
-      body: ListView.builder(
-        itemBuilder: (BuildContext context,int index) => new MessageCard(imageUrl: widget._listDates[index]['imageUrl'],
-          title: widget._listDates[index]['title'],
-          user: widget.user,
+      body: new FirebaseAnimatedList(
+        sort: (a,b)=>b.key.compareTo((a.key)),
+        query: _databaseReference.child(widget.user.userName).child('messages'),
+        itemBuilder: (BuildContext context,DataSnapshot snapshot,Animation<double> animation,int index)=>new MessageCard(
+          title:snapshot.value['nickName']??'昵称',user: user,subTitle: snapshot.value['userName'],
         ),
-        itemCount: widget._listDates.length,
       ),
     );
   }
