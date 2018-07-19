@@ -4,14 +4,15 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_database/ui/firebase_animated_list.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
-import 'package:httpdemo/login/login_registered_page.dart';
+import 'package:httpdemo/login/login_page.dart';
+
 
 void main(){
   Paint paint = new Paint();
   paint.color = Colors.black26;
   runApp(
     new MaterialApp(
-      home: LoginRegisteredPage(),
+      home: LoginPage(),
     )
   );
 
